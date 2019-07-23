@@ -1,15 +1,6 @@
-.dashboard {
-    border: 2px solid red;
-}
-
-.items-ul {
-
-    border: 2px solid blue;
-}
-
-.containers-ul {
-
-    border: 2px solid gold;
+body {
+    margin: 2px;
+    padding: 2px;
 }
 
 /***************************** Dropzone Styling *****************************/

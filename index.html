@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,31 +12,123 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/angular-drag-and-drop-lists/2.1.0/angular-drag-and-drop-lists.js">
     </script>
 
-    <title>dnd2
-    </title>
-</head>
-<body>
+    <link rel="stylesheet" href="style.css">
 
-    <div ng-app="DND2" ng-controller="DND2Controller"> 
+    <title>dnd2</title>
+</head>
+
+<body>
+    <div ng-app="DND2" ng-controller="DND2Controller" class="nestedDemo">
+
+        <script type="text/ng-template" id="list.html">
+            <!-- <ul dnd-list class="col-md-12 " dnd-drop="callback({targetList: list,targetIndex: index})">
+                <div class="row">
+                    <li ng-repeat="item in list" 
+                        dnd-draggable="item"
+                        ng-include="item.type + '.html'"
+                        class="col-md-6" 
+                        dnd-callback="onDrop(list, $index, targetList,targetIndex)">
+                    </li>
+                </div>
+            </ul> -->
+            <div dnd-list class="col-md-12 " dnd-drop="callback({targetList: list,targetIndex: index})">
+                <div class="row">
+                    <div class="col-md-6" ng-repeat="item in list">
+                        <div class="item col-md-12" dnd-draggable="item"
+                            dnd-callback="onDrop(list, $index, targetList,targetIndex)">Item {{item.id}}</div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <!-- This template is responsible for rendering a container element. It uses
+     the above list template to render each container column -->
+
+        <!-- Template for a normal list item -->
+        <script type="text/ng-template" id="item.html">
+            <div class="item col-md-6">Item {{item.id}}</div>
+        </script>
+
+        <!-- Main area with dropzones and source code -->
         <div class="col-md-12">
             <div class="row">
-                
+                <div ng-repeat="(zone, list) in models.dropzones" class="col-md-12">
+                    <div class="dropzone box box-yellow">
+                        <!-- The dropzone also uses the list template -->
+                        <h3>Dropzone {{zone}}</h3>
+                        <div class="container-element box box-blue" ng-include="'list.html'"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script>
+        <script>
+            angular.module('DND2', ['dndLists'])
+                .controller('DND2Controller', DND2Controller);
 
-angular.module('DND2', ['dndLists'])
-            .controller('DND2Controller', DND2Controller);
+            DND2Controller.$inject = ['$scope'];
 
-        DNDController.$inject = ['$scope'];
+            function DND2Controller($scope) {
 
-        function DNDController($scope) {
+                $scope.models = {
+                    selected: null,
+                    dropzones: {
+                        A: [{
+                                type: "item",
+                                id: 1
+                            },
+                            {
+                                type: "item",
+                                id: 2
+                            },
+                        ],
+                        B: [{
+                            type: "item",
+                            id: 3
+                        }],
+                        C: [{
+                                type: "item",
+                                id: 4
+                            },
+                            {
+                                type: "item",
+                                id: 5
+                            }
+                        ],
+                        D: [{
+                                type: "item",
+                                id: 6
+                            },
+                            {
+                                type: "item",
+                                id: 7
+                            }
+                        ]
+                    }
+                };
 
-        }
-    
-    </script>
-    
+                $scope.callback = function (data) {
+                    console.log(data);
+                }
+
+                $scope.onDrop = function (srcList, srcIndex, targetList, targetIndex) {
+
+                    console.log(srcList, srcIndex, targetList, targetIndex);
+
+                    var src = srcList[srcIndex];
+
+                    var target = targetList[targetIndex]
+
+                    targetList.splice(targetIndex, 1, src);
+
+                    srcList.splice(srcIndex, 1, target);
+
+                    console.log(srcList, srcIndex, targetList, targetIndex);
+                }
+
+            }
+        </script>
+
 </body>
+
 </html>
